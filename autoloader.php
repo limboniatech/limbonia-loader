@@ -3,5 +3,5 @@
  * Limbonia autoloader
  */
 
-require 'Loader.php';
+require 'lib/Loader.php';
 \Limbonia\Loader::registerAutoloader();
