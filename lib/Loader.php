@@ -21,7 +21,7 @@ class Loader
    *
    * @var array
    */
-  protected static $aViewDir = [__DIR__ . '/View'];
+  protected static $aViewDir = [];
 
   /**
    * PSR-4 compatible autoload method
@@ -50,7 +50,6 @@ class Loader
    */
   public static function registerAutoloader()
   {
-    set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__);
     spl_autoload_register([__CLASS__ , 'autoload'], false);
   }
 
