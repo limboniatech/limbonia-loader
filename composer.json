@@ -16,5 +16,11 @@
         "psr-4": {
             "Limbonia\\": "lib/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
+    "scripts": {
+        "tests": "@php vendor/phpunit/phpunit/phpunit"
     }
 }
