@@ -22,6 +22,21 @@ trait DriverList
   protected $sType = null;
 
   /**
+   * Return the sub-class type of this class
+   *
+   * @return string
+   */
+  public static function type()
+  {
+    if (__CLASS__ == static::class)
+    {
+      return '';
+    }
+
+    return str_replace(__CLASS__ . "\\", '', static::class);
+  }
+
+  /**
    * Return the full class type of this class
    *
    * @return string
@@ -144,7 +159,7 @@ trait DriverList
   {
     if (is_null($this->sType))
     {
-      $this->sType = str_replace(__CLASS__ . "\\", '', get_class($this));
+      $this->sType = static::type();
     }
 
     return $this->sType;
