@@ -12,39 +12,8 @@ namespace Limbonia\Traits;
  */
 trait DriverList
 {
+  use \Limbonia\Traits\HasType;
   protected static $hDriverList = [];
-
-  /**
-   * The subclass of any inheriting class
-   *
-   * @var string
-   */
-  protected $sType = null;
-
-  /**
-   * Return the sub-class type of this class
-   *
-   * @return string
-   */
-  public static function type()
-  {
-    if (__CLASS__ == static::class)
-    {
-      return '';
-    }
-
-    return str_replace(__CLASS__ . "\\", '', static::class);
-  }
-
-  /**
-   * Return the full class type of this class
-   *
-   * @return string
-   */
-  public static function classType()
-  {
-    return preg_replace("#Limbonia\\\\#", '', __CLASS__);
-  }
 
   /**
    * Generate and return an object of the specified type with specified parameters
@@ -56,11 +25,16 @@ trait DriverList
    */
   public static function driverFactory(string $sType, ...$aParam)
   {
-    $sTypeClass = self::driverClass($sType);
+    if (empty($sType))
+    {
+      throw new \Exception("Driver for " . static::classType() . " not specified!");
+    }
+
+    $sTypeClass = static::driverClass($sType);
 
     if (!class_exists($sTypeClass, true))
     {
-      throw new \Exception("Driver for " . self::classType() . " ($sType) not found!");
+      throw new \Exception("Driver for " . static::classType() . " ($sType) not found!");
     }
 
     return new $sTypeClass(...$aParam);
@@ -74,8 +48,8 @@ trait DriverList
    */
   public static function driverClass($sType): string
   {
-    $sDriver = self::driver($sType);
-    return empty($sDriver) ? '' : __CLASS__ . "\\" . $sDriver;
+    $sDriver = static::driver($sType);
+    return empty($sDriver) ? '' : static::class . "\\" . $sDriver;
   }
 
   /**
@@ -116,7 +90,7 @@ trait DriverList
               continue;
             }
 
-            if (!is_subclass_of($sClassName, __CLASS__, true))
+            if (__CLASS__ . '\\' . $sDriverName != $sClassName)
             {
               continue;
             }
@@ -148,20 +122,5 @@ trait DriverList
   {
     $hDriverList = self::driverList();
     return $hDriverList[strtolower($sName)] ?? '';
-  }
-
-  /**
-   * Get the subclass type for this object
-   *
-   * @return string
-   */
-  public function getType()
-  {
-    if (is_null($this->sType))
-    {
-      $this->sType = static::type();
-    }
-
-    return $this->sType;
   }
 }
